@@ -1,0 +1,26 @@
+
+utility.lab.example.com
+
+[all:vars]
+file_role_floor_level="Level3_inventory_file"
+
+[control]
+workstation.lab.example.com
+
+[dev]
+servera.lab.example.com
+serverb.lab.example.com file_role_floor_level="Level8_inventory_file"
+
+[copenhagen]
+serverc.lab.example.com
+
+[london]
+serverd.lab.example.com
+
+[combine:children]
+copenhagen
+london
+
+# [range]
+# 192.168.[1:4].[5:8]
+# system_[A:F].lab.example.com

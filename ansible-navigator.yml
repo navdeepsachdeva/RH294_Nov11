@@ -1,0 +1,22 @@
+---
+ansible-navigator:
+  ansible:
+    config:
+      path: ./ansible.cfg
+      help: false
+    inventory:
+      help: false
+  execution-environment:
+    container-engine: podman
+    enabled: true
+    image: utility.lab.example.com/ee-supported-rhel8:latest
+    pull:
+      policy: missing
+  logging:
+    append: true
+    file: /home/student/rh294_demos/ansible-navigator.log
+    level: warning
+  mode: stdout
+  playbook-artifact:
+    enable: false
+    save-as: '{playbook_dir}/{playbook_name}-artifact-{time_stamp}.json'

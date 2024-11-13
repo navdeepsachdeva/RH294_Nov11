@@ -1,0 +1,82 @@
+- name: Block Web Server 
+  hosts: servera*
+  gather_facts: true
+  become: true
+  remote_user: devops
+  tasks:
+    - name: Task 1 Outside Block
+      ansible.builtin.debug:
+        msg: "{{ file_role_floor_level }}"
+
+    - name: Block Of Web Server Tasks
+      block:
+        - name: Open Security Port
+          ansible.posix.firewalld:
+            service: http
+            permanent: true
+            state: enabled
+            immediate: true
+
+        - name: Install Apache Httpd Server
+          ansible.builtin.dnf:
+            name: httpd
+            state: present
+
+        - name: Deploy Web Page 2
+          ansible.builtin.copy:
+            content: |
+                      Applicaton Index Divided Page
+                      Mutiple Line in Play
+                      and it is extrely Long page to Fit in one Line
+                      Kept as it is at FInal Output
+            dest: /var/wwwW/html/index.html
+            mode: 0644
+
+        - name: Restart Web Service
+          ansible.builtin.service:
+            name: httpd
+            state: restarted
+      when:
+        - ansible_facts['memory_mb']['real']['free'] > 200
+        - ansible_facts['architecture'] == "x86_64"
+
+      rescue:
+        - name: Starting restoring old Config
+          ansible.builtin.debug:
+            msg: "May Day May Day"
+
+        - name: Close Security Port
+          ansible.posix.firewalld:
+            service: http
+            permanent: true
+            state: disabled
+            immediate: true
+
+        - name: Undeploy App
+          ansible.builtin.command: rm -rf /var/www/html/*
+            
+        - name: Uninstall Apache Httpd Server
+          ansible.builtin.dnf:
+            name: httpd
+            state: absent
+            autoremove: true
+      always:
+        - name: Email to Customer
+          ansible.builtin.debug:
+            msg: "Mail Sent"
+
+        - name: Access Web Page
+          ansible.builtin.uri:
+            url: http://servera.lab.example.com
+            return_content: true
+          ignore_errors: true
+          register: captured
+
+        - name: Print the Output
+          ansible.builtin.debug:
+            var: captured.content
+          ignore_errors: true
+
+    - name: Task 1 Outside Block
+      ansible.builtin.debug:
+        msg: "{{ file_role_floor_level }}"
