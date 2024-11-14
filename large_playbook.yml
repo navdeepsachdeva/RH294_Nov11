@@ -1,0 +1,29 @@
+- name: Import Variable Playbook
+  ansible.builtin.import_playbook: variable_demo.yml
+
+- name: Large Playbook
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Extra Task
+      ansible.builtin.debug:
+        msg: "Extra Task in Play"
+
+    - name: Import Task File Static_Advanced
+      ansible.builtin.import_tasks: tasks/tasks_oracle.yml
+      # when: meme is defined
+
+    - name: Include Task File Dynamic_Runtime
+      ansible.builtin.include_tasks: tasks/tasks_ldap.yml
+    # when: meme is defined
+
+    # - name: Loop around Task File
+    #   # ansible.builtin.import_tasks: "{{ item }}"
+    #   ansible.builtin.include_tasks: "{{ item }}"
+    #   loop:
+    #     - tasks/tasks_oracle.yml
+    #     - tasks/tasks_ldap.yml
+    #   when: meme is defined
+
+- name: Import Multiple Play Playbook
+  ansible.builtin.import_playbook: multiple_play.yml

@@ -1,0 +1,38 @@
+- name: Template Demo
+  hosts: all
+  # become: true
+  tasks:
+    - name: Collect All System Info in FIle
+      ansible.builtin.template:
+        src: j2/complex.j2
+        dest: /tmp/total
+      when: inventory_hostname in groups["control"]
+
+    # - name: Collect System Info in FIle
+    #   ansible.builtin.template:
+    #     src: j2/simple.j2
+    #     dest: /tmp/{{ inventory_hostname }}
+
+    # - name: Install Apache Httpd Server
+    #   ansible.builtin.dnf:
+    #     name: httpd
+    #     state: present
+ 
+    # - name: Deploy Web Page
+    #   ansible.builtin.template:
+    #     src: j2/simple.j2
+    #     dest: /var/www/html/index.html
+    #     mode: 0644
+ 
+    # - name: Start Web Service
+    #   ansible.builtin.service:
+    #     name: httpd
+    #     state: started
+ 
+    # - name: Open Security Port
+    #   ansible.posix.firewalld:
+    #     service: http
+    #     permanent: true
+    #     state: enabled
+    #     immediate: true
+

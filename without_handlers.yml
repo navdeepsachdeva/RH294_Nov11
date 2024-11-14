@@ -1,0 +1,33 @@
+- name: Without Handlers / Register Demo / Dependency Task
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Apache Httpd Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      register: captured_install
+
+    - name: Print Captured Complete Output
+      ansible.builtin.debug:
+        msg: "{{ captured_install }}"
+
+    - name: Deploy Web Page
+      ansible.builtin.copy:
+        content: "Index Page File"
+        dest: /var/www/html/index.html
+        mode: 0644
+      register: captured_app
+
+    - name: Print Captured App Output
+      ansible.builtin.debug:
+        msg: "{{ captured_app }}"
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+      when:
+        - captured_install.changed
+        - captured_app.state == "file"

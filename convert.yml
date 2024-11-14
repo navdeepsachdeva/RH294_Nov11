@@ -1,0 +1,32 @@
+- name: Convert Ad-Hoc to Yaml FIle
+  hosts: servera*
+  gather_facts: false
+  # remote_user: devops
+  tasks:
+    - name: Create file in /tmp dir
+      ansible.builtin.copy:
+        content: "Hello Ansible"
+        dest: "/tmp/file"
+        mode: 0644
+      # ansible.builtin.copy: content="Hello Ansible Class" dest="/tmp/file"
+
+    - name: Create a user
+      ansible.builtin.user:
+        name: antonio
+        comment: "Antonio User"
+      # become: true
+
+    - name: Open firewall Port
+      ansible.posix.firewalld:
+        service: mysql
+        immediate: true
+        state: enabled
+        permanent: true
+      # become: true
+
+    # - name: create a new user
+    #   cisco.ios.ios_user:
+    #     name: ansible
+    #     nopassword: true
+    #     sshkey: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    #     state: present

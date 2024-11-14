@@ -1,0 +1,24 @@
+- name: Ignore Errors Demo
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Open firewall Port
+      ansible.posix.firewalld:
+        service: mysqlllllllllll
+        immediate: true
+        state: enabled
+        permanent: true
+      ignore_errors: true
+
+    - name: Create file in /tmp dir
+      ansible.builtin.copy:
+        content: "Hello Ansible"
+        dest: "/tmp/file"
+        mode: 0644
+
+    - name: Create a user
+      ansible.builtin.user:
+        name: antonio
+        comment: "Antonio User"
+

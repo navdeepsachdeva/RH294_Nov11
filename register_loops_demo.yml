@@ -1,0 +1,17 @@
+- name: Loops Demo
+  hosts: servera*
+  gather_facts: false
+
+  tasks:
+    - name: Print Simple List
+      ansible.builtin.command: "{{ item }}"
+      loop:
+        - tail -n 2 /etc/passwd
+        - hostname
+        - whoami
+      register: captured
+
+    - name: Print Output
+      ansible.builtin.debug:
+        msg: "{{ item.cmd }} // {{ item.stdout_lines}}"
+      loop: "{{ captured.results }}"

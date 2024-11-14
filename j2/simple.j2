@@ -1,0 +1,16 @@
+Architecture    = {{ ansible_architecture }}
+Architecture    = {{ ansible_facts.architecture}}
+Architecture    = {{ ansible_facts['architecture'] }}
+Date            = {{ ansible_facts['date_time']['date'] }}
+Time            = {{ ansible_facts['date_time']['time'] }}
+Ip Address      = {{ ansible_facts['default_ipv4']['address'] }}
+Hard Disk       = {{ ansible_facts['devices']['vda']['size'] }}
+OS              = {{ ansible_facts['distribution'] }}
+FQDN            = {{ ansible_facts['fqdn'] }}
+Kernel          = {{ ansible_facts['kernel'] }}
+Total Memory    = {{ ansible_facts['memory_mb']['real']['total'] }}
+Free Memory     = {{ ansible_facts['memory_mb']['real']['free'] }}
+CPU Cores       = {{ ansible_facts['processor_cores'] }}
+Python Version  = {{ ansible_facts['python_version'] }}
+Laptop User     = {{ ansible_local.laptop.user_info.emp_name | default("Not Available") }}
+Laptop Location = {{ ansible_local.laptop.dept_info.dept_location | default("Not Available")}}

@@ -1,0 +1,55 @@
+- name: Force Handlers Demo/ Dependency Task 
+  hosts: servera*
+  gather_facts: false
+  become: true
+  force_handlers: true
+  tasks:
+    - name: Install Apache Httpd Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      notify:
+        - Restart Web Service
+        - Package Installed
+
+    - name: Deploy Web Page
+      ansible.builtin.copy:
+        content: "Index Page"
+        dest: /var/wwww/html/index.html
+        mode: 0644
+      notify:
+        - Restart Web Service
+        - App Deployed
+
+    - name: Open Security Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+      notify:
+        - Port Opened
+
+  handlers:
+    - name: Extra Handler
+      ansible.builtin.debug:
+        msg: "There for NO Reason"
+
+    - name: Port Opened
+      ansible.builtin.debug:
+        msg: "http Port Opened"
+
+    - name: App Deployed
+      ansible.builtin.debug:
+        msg: "Application Deployed"
+
+    - name: Package Installed
+      ansible.builtin.debug:
+        msg: "Http package Installed"
+
+    - name: Restart Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+
+# Handlers will run in the order it is defined not called

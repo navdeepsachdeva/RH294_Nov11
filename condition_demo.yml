@@ -1,0 +1,39 @@
+- name: Conditional Demo
+  hosts: servera*
+  gather_facts: true
+  become: true
+  vars_files:
+    - vars/outside_vars.yml
+  vars:
+    user: "adam"
+  tasks:
+    - name: Install Apache Httpd Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      register: captured
+
+    - name: Print Captured Complete Output
+      ansible.builtin.debug:
+        msg: "{{ captured }}"
+
+    - name: Print Captured Complete Output
+      ansible.builtin.debug:
+        msg: "{{ captured.changed }} // {{ ansible_facts['processor_cores'] }} ++ {{ ansible_facts['distribution'] }}"
+
+    # - name: Deploy Web Page
+    #   ansible.builtin.copy:
+    #     content: "Index Page"
+    #     dest: /var/www/html/index.html
+    #     mode: 0644
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+      when:
+        - captured.changed == true or ansible_facts['distribution'] == "RedHat"
+        - ansible_facts['processor_cores'] >= 1
+        - meme is not defined
+        - user in simple_list
+      # when: captured.changed == true and ansible_facts['processor_cores'] >= 1

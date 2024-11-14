@@ -1,0 +1,51 @@
+- name: Variable Demo
+  hosts: dev,copenhagen
+  gather_facts: false
+  vars:
+    file_role_floor_level: "Level12_Play_vars"
+
+  ## Development Level
+  vars_prompt:
+    - name: file_role_floor_level
+      prompt: "Please Enter Floor you want to GO !!"
+      private: false
+  vars_files:
+    - vars/outside_vars.yml
+
+  roles:
+    - role: file_role
+
+  tasks:
+    - name: Task 1 Outside Block
+      ansible.builtin.debug:
+        msg: "{{ file_role_floor_level }}"
+
+    - name: Block of Tasks
+      block:
+        - name: Task 2 Inside Block
+          ansible.builtin.debug:
+            msg: "{{ file_role_floor_level }}"
+          vars:
+            file_role_floor_level: "Level17_TASK_VARS"
+
+        - name: Task 3 Inside Block
+          ansible.builtin.debug:
+            msg: "{{ file_role_floor_level }}"
+      when: youme is not defined
+      vars:
+        file_role_floor_level: "Level16_BLOCK_VARS"
+
+    - name: Task 4 Outside Block
+      ansible.builtin.debug:
+        msg: "{{ file_role_floor_level }}"
+
+    - name: Access Dict Variable
+      ansible.builtin.debug:
+        msg: "{{ users.bjones.first_name }} // {{ users['bjones']['first_name'] }}"
+
+    - name: ENcryped Variable
+      ansible.builtin.debug:
+        msg: "{{ enc_var }}"
+
+## ansible-navigator  run variable_demo.yml --limit=servera* -e "file_role_floor_level=LEVEL22_GOD_LEVEL_COMMAND_LINE_GLOBAL"
+

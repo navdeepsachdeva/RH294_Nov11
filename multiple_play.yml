@@ -1,0 +1,64 @@
+- name: Install Web Server
+  hosts: dev
+  gather_facts: false
+  become: true
+  remote_user: devops
+  tasks:
+    - name: Install Apache Httpd Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Deploy Web Page 1
+      ansible.builtin.copy:
+        content: "Applicaton Index Page and it is extrely Long page to Fit in one Line, SO what to do GO ON and ON  and ON"
+        dest: /var/www/html/index.html
+        mode: 0644
+
+    - name: Deploy Web Page 2
+      ansible.builtin.copy:
+        content: >
+                  Applicaton Index Divided Page
+                  Mutiple Line in Play
+                  and it is extrely Long page to Fit in one Line
+                  Joined at FInal Output
+        dest: /var/www/html/first.html
+        mode: 0644
+
+    - name: Deploy Web Page 2
+      ansible.builtin.copy:
+        content: |
+                  Applicaton Index Divided Page
+                  Mutiple Line in Play
+                  and it is extrely Long page to Fit in one Line
+                  Kept as it is at FInal Output
+        dest: /var/www/html/second.html
+        mode: 0644
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+
+    - name: Open Security Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+
+- name: Test Web Server
+  hosts: control
+  gather_facts: false
+  remote_user: student
+  become: false
+  tasks:
+    - name: Access Web Page
+      ansible.builtin.uri:
+        url: http://servera.lab.example.com
+        return_content: true
+      register: captured
+
+    - name: Print the Output
+      ansible.builtin.debug:
+        var: captured.content

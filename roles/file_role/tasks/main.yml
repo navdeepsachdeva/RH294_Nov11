@@ -1,0 +1,8 @@
+---
+# tasks file for file_role
+
+- name: Create file in /tmp dir
+  ansible.builtin.copy:
+    content: "{{ file_role_floor_level }}"
+    dest: "{{ file_role_file_name }}"
+    mode: 0644

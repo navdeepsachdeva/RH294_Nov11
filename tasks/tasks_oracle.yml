@@ -1,0 +1,15 @@
+- name: Oracle Task 1
+  ansible.builtin.debug:
+    msg: "Oracle Configuration Task 1"
+
+- name: Oracle Task 2
+  ansible.builtin.debug:
+    msg: "Oracle Configuration Task 2"
+
+- name: Oracle Task 3
+  ansible.builtin.debug:
+    msg: "Oracle Configuration Task 3"
+
+- name: Oracle Task 4
+  ansible.builtin.debug:
+    msg: "Oracle Configuration Task 4"

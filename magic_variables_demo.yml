@@ -1,0 +1,13 @@
+- name: Magic Variables
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Print Hostname
+      ansible.builtin.debug:
+        msg: "Task Running on {{ inventory_hostname }} {{ ansible_local.laptop.user_info.emp_name }}"
+
+    # - name: Print Hostname
+    #   ansible.builtin.debug:
+    #     msg: "Task Running on {{ inventory_hostname }} {{ groups[\"combine\"] }}"
+    #   when: inventory_hostname in groups["combine"]
+

@@ -1,0 +1,46 @@
+- name: Failed when condition Demo 
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Update Apache Httpd Packages
+      ansible.builtin.dnf:
+        name: httpd
+        state: latest
+      # failed_when: update_output.changed == false
+      register: update_output
+
+    # - name: Fail task with customized Message
+    #   ansible.builtin.fail:
+    #     msg: "Check your repo first / Nothing Changed"
+    #   when: update_output.changed == false
+
+    - name: Assert/Fail task with customized Message
+      ansible.builtin.assert:
+        that:
+          - update_output.changed == true
+          - meme is defined
+        fail_msg: "Check your repo first / Assert Condition Failed"
+        success_msg: "THings Updated Hurray Continue"
+
+    - name: Print ipdate output
+      ansible.builtin.debug:
+        msg: "{{ update_output }}"
+
+    - name: Deploy Web Page
+      ansible.builtin.copy:
+        content: "Index Page"
+        dest: /var/www/html/index.html
+        mode: 0644
+
+    - name: Open Security Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+
+    - name: Restart Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted

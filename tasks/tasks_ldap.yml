@@ -1,0 +1,11 @@
+- name: Ldap Config Task 1
+  ansible.builtin.command: sleep 2
+
+- name: Ldap Config Task 2
+  ansible.builtin.command: sleep 2
+
+- name: Ldap Config Task 3
+  ansible.builtin.command: sleep 2
+
+- name: Ldap Config Task 4
+  ansible.builtin.command: sleep 2

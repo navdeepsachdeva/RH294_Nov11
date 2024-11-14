@@ -1,0 +1,32 @@
+- name: Install Web Server
+  # hosts: servera*,test,copenhagen
+  hosts:
+    - servera*
+    - test
+    - copenhagen
+  gather_facts: false
+  tasks:
+    - name: Install Apache Httpd Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Deploy Web Page
+      ansible.builtin.copy:
+        content: "Index Page"
+        dest: /var/www/html/index.html
+        mode: 0644
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+
+    - name: Open Security Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+
+    ## '-' list os something

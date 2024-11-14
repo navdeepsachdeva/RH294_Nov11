@@ -1,5 +1,5 @@
 
-utility.lab.example.com
+# utility.lab.example.com
 
 [all:vars]
 file_role_floor_level="Level3_inventory_file"
@@ -13,9 +13,11 @@ serverb.lab.example.com file_role_floor_level="Level8_inventory_file"
 
 [copenhagen]
 serverc.lab.example.com
+# copenhagen_DB ansible_host=serverc.lab.example.com
 
 [london]
 serverd.lab.example.com
+# London_web  ansible_host=serverd.lab.example.com
 
 [combine:children]
 copenhagen

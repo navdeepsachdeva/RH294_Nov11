@@ -1,0 +1,4 @@
+---
+# defaults file for file_role
+file_role_floor_level: "Level2_role_defaults"
+file_role_file_name: /tmp/level_file

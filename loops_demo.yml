@@ -1,0 +1,32 @@
+- name: Loops Demo
+  hosts: servera*
+  gather_facts: false
+  vars_files:
+    - vars/outside_vars.yml
+
+  tasks:
+    - name: Print Simple List
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_items: "{{ simple_list }}"
+      # loop: "{{ simple_list }}"
+
+    - name: Print Complex List
+      ansible.builtin.debug:
+        msg: "{{ item['fn'] }} -- {{ item['ln'] }}"
+      with_list: "{{ complex_list }}"
+      # loop: "{{ complex_list }}"
+
+    - name: Print Dictionary Variables
+      ansible.builtin.debug:
+        msg: "{{ item['key'] }} ++++ {{ item['value'] }}"
+        # msg: "{{ item}}"
+      with_dict: "{{ user_dict }}"
+      #loop: "{{ user_dict }}"
+      #
+      #
+    - name: Setup IP for multiple Ethernet Card
+      ansible.builtin.debug:  
+        msg: "{{ item }}"
+        #msg: "eth{{ item }}"
+      with_sequence: start=0 end=5 format=eth%x

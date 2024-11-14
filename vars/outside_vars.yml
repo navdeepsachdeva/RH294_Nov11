@@ -1,0 +1,42 @@
+file_role_floor_level: "Level14_play_vars_files"
+
+simple_list:
+  - adam
+  - Antonio
+  - Febin
+  - Henrik
+
+complex_list:
+  - fn: adam
+    ln: D
+  - fn: Antonio
+    ln: N
+  - fn: Febin
+    ln: T
+  - fn: Henrik
+    ln: Dj
+
+user_dict:
+  adam: D
+  Antonio: N
+  Febin: T
+  Henrik: Dj
+  
+
+users:
+  bjones:
+    first_name: Bob
+    last_name: Jones
+    home_dir: /users/bjones
+  acook:
+    first_name: Anne
+    last_name: Cook
+    home_dir: /users/acook
+# enc_var: value@123
+# enc_var: !vault |
+#           $ANSIBLE_VAULT;1.1;AES256
+#           33326666316265333530376332633664303366383136386664633930656563393264656430623565
+#           3735653035613332613534613030633965326165343765350a633565396465303766306461386131
+#           62636466643862336539353263316334643636306261643431313066656336653032326464313064
+#           3935363839333135390a356662666632333732376164616361656566383034333237396339356664
+#           3230

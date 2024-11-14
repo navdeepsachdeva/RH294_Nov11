@@ -1,0 +1,22 @@
+- name: DOnt Use untill there is NO Module for that task
+  hosts: dev
+  gather_facts: false
+  tasks:
+    - name: Install Python for Future Tasks
+      ansible.builtin.raw: dnf install -y python3
+
+    - name: Command Module
+      ansible.builtin.command: touch /tmp/file1
+
+    - name: SHell Module
+      ansible.builtin.shell: mkdir /tmp/me
+
+    - name: Use FIle Modules instead of shell mkdir
+      ansible.builtin.file:
+        path: /tmp/you
+        state: directory
+        recurse: true
+        owner: devops
+        group: devops
+
+    # Non Idempotent Module

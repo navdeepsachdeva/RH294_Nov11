@@ -1,0 +1,53 @@
+{# Information About Systems #}
+
+{% for sys in groups["all"] %}
+{% if sys in groups["control"] %}
+
+## Collecting Info About Control Node {{ hostvars[sys].inventory_hostname }} ##
+Current System	= {{ sys }}
+Inventory Host	= {{ hostvars[sys].inventory_hostname }}
+Architecture    = {{ hostvars[sys].ansible_architecture }}
+Architecture    = {{ hostvars[sys].ansible_facts.architecture}}
+Architecture    = {{ hostvars[sys].ansible_facts['architecture'] }}
+Date            = {{ hostvars[sys].ansible_facts['date_time']['date'] }}
+Time            = {{ hostvars[sys].ansible_facts['date_time']['time'] }}
+Ip Address      = {{ hostvars[sys].ansible_facts['default_ipv4']['address'] }}
+Hard Disk       = {{ hostvars[sys].ansible_facts['devices']['vda']['size'] }}
+OS              = {{ hostvars[sys].ansible_facts['distribution'] }}
+FQDN            = {{ hostvars[sys].ansible_facts['fqdn'] }}
+Kernel          = {{ hostvars[sys].ansible_facts['kernel'] }}
+Total Memory    = {{ hostvars[sys].ansible_facts['memory_mb']['real']['total'] }}
+Free Memory     = {{ hostvars[sys].ansible_facts['memory_mb']['real']['free'] }}
+CPU Cores       = {{ hostvars[sys].ansible_facts['processor_cores'] }}
+Python Version  = {{ hostvars[sys].ansible_facts['python_version'] }}
+Laptop User     = {{ hostvars[sys].ansible_local.laptop.user_info.emp_name | default("Not Available") }}
+Laptop Location = {{ hostvars[sys].ansible_local.laptop.dept_info.dept_location | default("Not Available")}}
+
+{% endif %}
+{% endfor %}
+
+{% for sys in groups["all"] %}
+{% if sys not in groups["control"] %}
+
+## Collecting Info About Managed Host {{ hostvars[sys].inventory_hostname }} ##
+Current System	= {{ sys }}
+Inventory Host	= {{ hostvars[sys].inventory_hostname }}
+Architecture    = {{ hostvars[sys].ansible_architecture }}
+Architecture    = {{ hostvars[sys].ansible_facts.architecture}}
+Architecture    = {{ hostvars[sys].ansible_facts['architecture'] }}
+Date            = {{ hostvars[sys].ansible_facts['date_time']['date'] }}
+Time            = {{ hostvars[sys].ansible_facts['date_time']['time'] }}
+Ip Address      = {{ hostvars[sys].ansible_facts['default_ipv4']['address'] }}
+Hard Disk       = {{ hostvars[sys].ansible_facts['devices']['vda']['size'] }}
+OS              = {{ hostvars[sys].ansible_facts['distribution'] }}
+FQDN            = {{ hostvars[sys].ansible_facts['fqdn'] }}
+Kernel          = {{ hostvars[sys].ansible_facts['kernel'] }}
+Total Memory    = {{ hostvars[sys].ansible_facts['memory_mb']['real']['total'] }}
+Free Memory     = {{ hostvars[sys].ansible_facts['memory_mb']['real']['free'] }}
+CPU Cores       = {{ hostvars[sys].ansible_facts['processor_cores'] }}
+Python Version  = {{ hostvars[sys].ansible_facts['python_version'] }}
+Laptop User     = {{ hostvars[sys].ansible_local.laptop.user_info.emp_name | default("Not Available") }}
+Laptop Location = {{ hostvars[sys].ansible_local.laptop.dept_info.dept_location | default("Not Available")}}
+
+{% endif %}
+{% endfor %}
