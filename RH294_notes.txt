@@ -1,0 +1,497 @@
+Welcome to RH294 
+Red Hat Enterprise Linux Automation with Ansible
+RHEL 9.0
+Ansible AAP Ansible Automation Platfom
+
+
+
+
+RH294			Ansible with Managed Hosts Linux
+DO417			Ansible with Managed Hosts Windows
+DO457			Ansible with Managed Hosts Network Devices
+DO374			Advanced Ansible Collection/ AAP
+DO467			AAP Controller/Tower Workflow
+
+
+Audio/ Video / Screen Share
+
+
+
+
+
+
+Name:
+Org: If Possible
+Experience / Pre-Requisites:
+	Red Hat Certified System Administrator (EX200/RHCSA) certification or equivalent Red Hat Enterprise Linux knowledge and experience. RH124 / RH134/ RH199
+	Ansible/ Ansible Controller/Ansible Tower
+	ansible-playbook / ansible-navigator
+	vim ssh cp mv rm mkdir firewall-cmd yum/dnf systemctl/service
+Expectations:
+Hobbies/ Interesting Things:
+Country/City/Timezone:
+
+
+
+
+
+Chapter 1:
+
+Ansible Playbook/ IAC
+
+Remote Manual Tasks
+History of changes/Proper Documentation
+Integrate Multiple Team work
+
+
+
+Red Hat AAP2 Components:
+
+1. Ansible Core:
+	yum install ansible-core -y
+   ansible.builtin  Modules: provide bare minumum modules, plugins and key functions such as loops, conditionals
+
+	Earlier version upto 2.9, All modules were provided by RedHat. version of Modules was also problem. 
+	cisco device: IOS 1.1    IOS 1.12  IOS 2.2  
+
+	ALL Ansible Modules	=	Ansible Core (RedHat) + Other Specific Modules (Vendor Cisco,MYsql, MS, VMWare, Oracle, Juniper) 
+
+2. Ansible Content Collections:
+
+Ansible Content Collections made up of related modules, roles, and plug-ins for specific product with specific version (Device, OS etc )that are supported by the same group of developers. It provide flexibility to select different versions of collections for different version of Product( OS/Device)
+Ansible Collections = Modules + Plugins + Roles
+Company/Org(Namespace).Product(collection_name)
+cisco.ios
+redhat.insights
+
+3. Automation Content Navigator ( ansible-navigator )
+   This tool replaces and extends the functionality of several older command-line utilities
+   yum install ansible-navigator -y 
+  ansible-config		ansible-navigator config
+  ansible-inventory		ansible-navigator inventory
+  ansible-playbook		ansible-navigator run
+  ansible-doc			ansible-navigator doc 
+  ansible-lint			ansible-navigator lint
+
+  It separates the control node on which you run Ansible from the automation execution environment that runs it, by running your playbooks in a container. 
+  watch podman ps 
+
+4. Automation Execution Environments
+   An automation execution environment is a container image that contains Ansible Core, Ansible Content Collections, and any Python libraries, executables, or other dependencies needed to run your playbook
+  Container images can be downloaded from RedHat or custom build( ansible-builder)
+  Playbooks can be run on Automation Controller (formerly called Red Hat Ansible Tower) using Container Image
+  ansible-builder to create your own custom execution environments
+
+5. Automation Controller (Red Hat Ansible Tower or AWX community)
+   Used to run ansible playbook on Enterprise scale. It provides a web UI and a REST API that can be used to configure, run, and evaluate your automation jobs.
+   The new automation controller design separate the control node (providing the web UI and API) from the automation execution environments (now running
+in containers).
+   
+6. Ansible Automation Hub
+   Place to distribute Ansible Collections and Container image registry for automation execution environments.
+   Ansible AUtomation Hub is provided by Redhat/Ansible Galaxy or can be Private Automation Hub within Organization
+
+7. Hosted Services
+
+   Red Hat Insights:  Keep checking Remote Systems to Understand automation code you are running and whether it is successful
+   Automation Services Catalog: Allow nontechnical users to trigger automation with a point-and-click tool based on ITSM standards
+
+
+
+
+Running Playbooks with Automation Content Navigator:
+
+Old Way:
+	This runs playbook on control node
+	ansible-playbook -i inventory playbook.yml
+New Way:
+	This runs playbook on Container using Image (ansible runner)
+	Interactive:
+	ansible-navigator run playbook.yml -i inventory 
+	## Go to specfic section by pressing :NUMBER
+		
+	Non Interactive:
+	ansible-navigator run playbook.yml -i inventory -m stdout
+
+
+Improving Portability with Automation Execution Environments: 
+  Instead of creating multiple Virtual environment to run playbooks for different version of ansible collections, python modules, developers can create the customized environment in a custom execution environment, test it with ansible-
+navigator, and distribute it to the automation controller as a container image.
+  Red Hat Ansible Automation Platform 2.0, this default environment includes Ansible Core 2.11 and a standard set of Red Hat Ansible Certified Content Collections.
+  Image can be download from Redhat/Private AUtomation Hub and used by providing --execution-environment-image (--eei) option to select a specific container image
+  Pull Image:
+   podman login registry.redhat.io(or Private AUtomation Hub)
+   podman pull REGISTRY/IMAGE:TAG
+
+Integrate Multiple Playbooks
+Oracle TEAM
+Security
+Firewall
+Admin team
+
+Follow DIagram
+yum install ansible -y
+
+
+Collection are named as
+Namespace.collectionName
+Company(ORG).ProductName
+
+
+
+
+
+Chapter 2: 
+
+Inventory:
+	static inventory:
+		Default: /etc/ansible/hosts
+		custom:  -i Inventory_File_Path
+		
+		
+	IP and Hostname are treated as 2 different systems, even though it is same system
+	groups:   
+		Default groups:  all ungrouped
+		Custom Groups:   Named Groups
+
+	Ansible configuration File:
+
+		ansible --version
+
+	Default File:		/etc/ansible/ansible.cfg			Level 1
+	User file(Home Dir):	~/.ansible.cfg					Level 2		// Hidden File
+	Project specific:	./ansible.cfg					Level 3		// Current Folder
+	Define Env Variable:	ANSIBLE_CONFIG      #=/tmp/ansible.config	Level 4
+
+YAML Format:
+   Option_NAME: value
+   
+INI/AD-HOC Format:
+   Option_NAME=value
+
+ansible 192.168.2.[/6-8] --list-hosts -i jordi_hosts
+
+ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yaml
+
+Process of Execution AD-hoc/Playbook
+1. Find ansible.cfg path
+2. Read that ansible.cfg
+3. findout parameters based on ansible.cfg e.q. inventory
+
+FOR ansible, IP/hostname/FQDN are different systems, it has no machanism touse ARP protocol to figure out that they are same system.
+play.yml
+servera				NOT Desired/ Make Changes
+servera.lab.example.com		Desired/NO Changes
+172.25.250.10			Desired/NO Changes
+
+
+Two host groups always exist:
+System Defined groups:  all,ungrouped
+User Defined Groups:  YOUR_NAMES_PLEASE
+
+
+Page 34: local connection, winrm, nmcli connection   ?????
+
+
+Special Modules ( DO NOT USE THESE MODULES UNTIL YOU HAVE TO )
+
+these 3 modules are NOT idempotent [DO NOT check current state]
+1. command
+2. shell
+3. raw: IF python NOT available on Managed Hosts, DIRTY LOW LEVEL execution of python installation on Managed Hosts
+
+
+vim ~/.vimrc
+  autocmd FileType yaml setlocal ai ts=2 sw=2 et cuc
+  
+
+ai : autoindent - copy the previous line's indentation
+ts=2 : tabstop - set the number of spaces that the Tab key uses, when pressed
+sw=2 : shiftwidth - number of spaces to use with autoindent
+et : expandtab - use the space character as whitespace instead of Tab
+cuc : cursorcolumn - highlight the column the cursor is on
+
+
+
+Playbook should follow 3 step
+
+				###############  Instructions to Run Playbook ###############
+
+
+###############  Step 1:  Check Syntax of Playbook ###############
+
+ansible-playbook install_httpd.yml --syntax-check
+ansible-navigator run first.yml -m stdout --syntax-check
+ansible-navigator lint first.yml -m stdout // For Best Practises
+
+
+
+
+###############  Step 2:  Run Playbook in Simulation Mode (DRY RUN Or Prediction or Matrix Oracle) ###############
+###############  Step 2:  This Step only check in playbook if tasks will make any changes in managed hosts or not if run in real mode ###############
+
+ansible-playbook install_httpd.yml --check
+
+				#### OR ####
+
+ansible-playbook install_httpd.yml -C
+
+
+###############  Step 3:  Run Playbook in Real Mode ###############
+
+ansible-playbook install_httpd.yml 
+ansible-playbook install_httpd.yml --step  ## LOOKS GOOD AND COOL
+ANSIBLE_STDOUT_CALLBACK=yaml ansible-playbook abc.yaml
+
+@@ USEFUL Command
+ ansible-playbook first.yml --check --limit servera --start-at-task="Content in file" --diff --step
+
+Flow:
+ansible.cfg -> Knows other parameters (Inventory,esclation) -> Inventory File(Must have hosts of playbook) -> playbook
+
+
+FOR COPY and PASTE in vim
+esc
+:set paste
+paste the content
+
+esc
+:set nopaste
+
+
+Chapter 4: 
+
+Scope of Variables:
+
+Ansible Config Scope: in ansible.cfg/command line inbuild ansible paramters
+
+	## 	Variable Scope:		##
+	
+Role Scope:	In roles structure (defaults/main.yml and vars/main.yml)
+Host Scope:	Inventory where hosts are defined
+Play Scope:	In Playbook
+Global Scope:	Command Line  OR RUN Time
+
+		Scope of Variables:
+Host Scope <  Play Scope  < Global Scope
+
+
+1.	Host Scope		// Inventory File , group_vars, host_vars
+
+	A.	Group_inventory: 		inventory File_ group variable		use = symbol (if using ini format inventory)
+											[groupname:vars]
+											var1="somevalue"
+		
+	B.	Group_group_vars_folder: 	group_vars/{{groupname}}(.yml)		use : symbol
+			
+	C.	host inventory variable		use = symbol
+	D.	host_vars folder		host_vars/{{servername}}.yml		use : symbol
+
+
+2. 	Play Scope (Playbook)
+	A.	vars:
+	B. 	Vars_Prompt:	// prompt user to enter value //Interactive // Good for Development Env
+		
+	C.	vars_files:
+		- file_path
+		
+	D:	Task Scope:
+		vars:
+		  variable_name: "Value"  ## For that Specific Task
+	E. 	Set Fact
+			set_fact:
+			  var1: "Some value you want to override"	
+3.	Global Scope (Command Line Values)
+	A.	ansible-playbook abc.yml -e 'var_name=some_value var2=someValue2 var3=someValue3' 
+Ansible Vault:
+		Create/Encrypt File:
+
+ansible-vault create secret.yml							//new File Interactive
+ansible-vault create secret.yml	--vault-password-file=somepass.txt		//new File // Non Interactive
+ansible-vault encrypt secret.yml						//Existing File Prompt File already Exist
+ansible-vault encrypt secret.yml --vault-password-file=somepass.txt		//Existing File from some file Non Interactive
+ansible-vault view secret.yml							//see File ## vim will not work
+ansible-vault view secret.yml 	--vault-password-file=somepass.txt		//see File ## NON Interactive
+ansible-vault decrypt secret.yml --output=without_secret.yml			//decrypt File
+ansible-vault edit secret.yml							//change File contents
+ansible-vault edit secret.yml	--vault-password-file=somepass.txt		//change File contents Non Interactive
+ansible-vault rekey secret.yml 							//change current password to new one
+ansible-vault rekey secret.yml 	--vault-password-file=pass1.txt --new-vault-password-file=pass2.txt //Non-Interactive
+ansible-vault encrypt_string vyos						//Encrypt password
+
+		Run a Encrypted File:
+ansible-navigator run -m stdout secret.yml --ask-vault-pass			//single password on all files //Interactive
+ansible-navigator run -m stdout secret.yml --vault-password-file=pass1.txt	//single password on all files //Non-Interactive
+
+vim ansible.cfg
+[defaults]
+vault_password_file=PATH/pass1.txt
+
+	//Multiple password on one file	
+ansible-navigator run -m stdout secret.yml --vault-id 1@prompt --vault-id 2@prompt --vault-id 3@prompt --vault-id 4@prompt
+ansible-navigator run -m stdout secret.yml --vault-id 1@prompt --vault-id 2@prompt --vault-id 3@pass1.txt --vault-id 4@pass2.txt
+
+
+
+## Fact ##
+System Variable is Ansible FACT i.e. OS, OS Version, RAM, HDD
+
+
+
+Chapter 5:
+
+Tasks:
+- name: Print
+  debug:
+    msg: "eth{{item}}"
+  with_sequence: start=0 end=5
+ 
+- name: Print
+  debug:
+    msg: "{{item}}"
+  with_fileglob: 
+  - "/etc/ssh/*"
+
+
+
+	##  Handling Task Failure  ##
+	
+ignore_errors: Carry one with next tasks if any task fails
+force_handlers: Run the invoked handlers by previous task in case of failure of next task 
+failed_when: fail the task manually if output is NOT expected
+changed_when: change status of task from OK to CHANGED so that we can invoke handlers
+
+
+block:
+
+try 		block
+catch 		rescue
+finally		always
+
+ROLLBACK of tasks
+
+Chapter 7:
+
+
+https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html
+
+	Import						Include
+	static inlucsion of tasks/			Dynamic inclusion of tasks/
+	Task avaiable at pre-processing time		Task avaiable at Runtime/execution time
+
+
+Import (import_tasks, import_role)
+
+For Development Environment
+static inclusion of tasks(you know tasks in advance)
+--start-at-task can be used to start execution of playbook at certain point
+ansible-playbook abc.yml --syntax-check    ## also check syntax of imported Task file
+4  task in external file ## Condition checked on all task one by one although condition is false
+Might take more time
+Can not loop for importing files
+
+include (include_tasks, include_role)
+
+For Production Environment
+Dynamic inclusion of tasks(you DO NOT know tasks in advance)
+--start-at-task does n't work as task names are NOT known in advance
+ansible-playbook abc.yml --syntax-check    ## DOES NOT check syntax of included Task file
+4  task in external file ## Condition checked only once, if false file tasks are not included in execution of playbook
+Time efficient
+Can loop for including files
+
+import_playbook: playbook can only be imported NOT included
+
+
+
+Chapter8:
+
+Reusability/ROLE
+
+Trivial Copy:
+1. for Sender: Security Issue for sharing variables,hosts, users,passwords
+2. for receiver: Understand the whole big playbook, change accordingly, too many tasks for many issues (oracle,web,network,security) 
+
+
+task/other things only for specific purpose
+e.g. Webserver/FTPServer/Load Balancer
+
+security_role
+
+roles:
+  role: Webserver
+
+Section 2: Private Role/organisational Role/Custom Roles
+Section 3: Public Roles/Ansible Galaxy/No Support
+Section 4: Redhat Subscribed Roles/Support
+
+defaults: 	define variables in main.yml
+vars:		define variables in main.yml but highter priority than defaults
+tasks:		TASK file, write tasks in main.yml 
+handlers:	define handlers in main.yml which will be invoked by tasks in main.yml
+meta:		Define Dependency roles
+templates:	only template files .j2
+
+
+
+
+1. Pre Tasks:
+2. Pre Tasks Notified Handlers
+
+3. Call All Dependency Role Tasks First
+4. Call Main Role Tasks 
+5. Playbook Extra Tasks
+
+6. Run All Dependency Role Handler
+7. Run Main  Role Handler
+8. Extra Task Playbook Handler
+
+9. Post Tasks
+10.Post Tasks Notified Handlers
+
+Private Roles	OWN		/home/student/.ansible/roles:Custom_Path
+Redhat Roles	Paid		/usr/share/ansible/roles
+Ansible Galaxy	Free		/etc/ansible/roles
+			./roles
+
+Redhat Roles:
+Install package: rhel-system-roles
+Install Collection: 
+
+sudo yum install rhel-system-roles
+ll /usr/share/ansible/roles/rhel-system-roles.timesync
+
+
+Chapter 9: 
+
+Check Mode:
+Tries to predict/simulation final execution but doesn't make any change
+If a task has check_mode: true set, it always runs in its check mode and does not
+perform any action, even if you do not pass the --check option to ansible-navigator.
+Assume 4 tasks:
+
+third task is dependent on first task
+Run first Task in READ Mode and rest in check mode.
+
+Tags:
+System Tags:  	all (default), always, never, untagged
+User rags:	User named tags
+
+
+
+
+
+
+Scripts are written in Python normally. bash 
+https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
+https://docs.ansible.com/ansible/latest/inventory_guide/intro_patterns.html
+
+
+
+
+
+
+
+
+
+	
