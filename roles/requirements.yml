@@ -1,0 +1,7 @@
+
+- src: geerlingguy.mysql
+  name: lukas_role
+
+- src: file:///home/student/Downloads/ansible-role-nginx-3.1.4.tar.gz
+
+- src: navdeepsachdeva.windows_iis

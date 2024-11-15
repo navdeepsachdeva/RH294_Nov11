@@ -1,0 +1,7 @@
+- name: Collection Demo
+  hosts: servera*
+  gather_facts: false
+
+  roles:
+    - role: redhat.rhel_system_roles.network
+    #- role: cisco.catalystwan.health_checks

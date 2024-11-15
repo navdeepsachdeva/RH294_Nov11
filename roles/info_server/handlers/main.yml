@@ -1,0 +1,10 @@
+---
+# handlers file for info_server
+
+- name: collection Started
+  ansible.builtin.debug:
+    msg: "Sleeping for few seconds before info collection"
+
+- name: system Info Collected
+  ansible.builtin.debug:
+    msg: "{{ inventory_hostname }} Info Collected Succesfully"

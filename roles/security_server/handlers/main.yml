@@ -1,0 +1,16 @@
+---
+# handlers file for security_server
+
+
+- name: security package installed
+  ansible.builtin.debug:
+    msg: "{{ security_server_package }} Installed Successfully"
+
+- name: security port opened
+  ansible.builtin.debug:
+    msg: "{{ security_server_port }} Enabled Successfully"
+
+- name: restart firewalld service
+  ansible.builtin.service:
+    name: "{{ security_server_service }}"
+    state: restarted

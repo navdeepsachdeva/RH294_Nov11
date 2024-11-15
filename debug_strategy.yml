@@ -1,0 +1,44 @@
+- name: Debug Strategy Demo
+  hosts: servera*
+  gather_facts: false
+  become: true
+  strategy: debug
+  tasks:
+    - name: Command Module Task 1
+      ansible.builtin.command: touch /tmp/file1
+      register: captured
+
+    - name: Install Apache Httpd Server Task 21
+      ansible.builtin.dnf:
+        name: httpdd
+        state: present
+      # task.args
+      # task.args['name']='httpd'
+      # redo
+
+    - name: Deploy Web Page Task 22
+      ansible.builtin.copy:
+        content: "Index Page {{ captured.changed }}"
+        dest: /var/wwww/html/index.html
+        mode: 0644
+      # task.args
+      # task.args['dest']='/var/www/html/index.html'
+      # redo
+
+    - name: Start Web Service Task 23
+      ansible.builtin.service:
+        name: httpddddd
+        stateeee: started
+      # task.args
+      # task.args['name']='httpd'
+      # task.args['state']='started'
+      # del(task.args['stateeee'])
+      # redo
+
+
+    - name: Open Security Port Task 24
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true

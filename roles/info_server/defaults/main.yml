@@ -1,0 +1,5 @@
+---
+# defaults file for info_server
+
+info_server_template: simple.j2
+info_server_file: /tmp/{{ inventory_hostname }}

@@ -1,0 +1,19 @@
+---
+# tasks file for web_server
+
+- name: Install Apache Httpd Server
+  ansible.builtin.dnf:
+    name: "{{ web_server_package }}"
+    state: "{{ web_server_state }}"
+  notify:
+    - Restart Web Service
+    - Package Installed
+
+- name: Deploy Web Page
+  ansible.builtin.copy:
+    content: "{{ web_server_content }}"
+    dest: "{{ web_server_index }}"
+    mode: 0644
+  notify:
+    - Restart Web Service
+    - App Deployed

@@ -1,0 +1,65 @@
+- name: Roles Demo
+  hosts: servera*
+
+  pre_tasks:
+    - name: Check Pre-requsites via assert
+      ansible.builtin.assert:
+        that:
+          - ansible_architecture == "x86_64"
+          - ansible_facts['memory_mb']['real']['free'] >= 300
+        fail_msg: "Not Enough Memory or Arch not OK"
+        success_msg: "Hardware is Fine"
+
+    - name: sleep before check Pre-requsites
+      ansible.builtin.command: sleep 2
+      notify:
+        - services_down
+
+  roles:
+    # - role: info_server
+    # - role: security_server
+    - role: web_server
+      web_server_content: "Override in Playbook"
+      become: true
+
+
+  tasks:
+    - name: Import/Include a Role
+      ansible.builtin.include_role:
+      # ansible.builtin.import_role:
+        name: file_role
+      when: meme is not defined
+      
+    - name: Extra Task in Play
+      ansible.builtin.command: sleep 2
+      notify:
+        - play_task_handler
+
+  post_tasks:
+    - name: Access Web Page
+      ansible.builtin.uri:
+        url: http://servera.lab.example.com
+        return_content: true
+      ignore_errors: true
+      register: captured
+         
+    - name: Print the Output
+      ansible.builtin.debug:
+        msg: "{{ captured.content }} and {{ captured.failed }}"
+      changed_when: captured.failed == 0
+      ignore_errors: true
+      notify:
+        - services_up
+
+  handlers:
+    - name: play_task_handler
+      ansible.builtin.debug:
+        msg: "Good Sleep in Play Task Section"
+
+    - name: services_down
+      ansible.builtin.debug:
+        msg: "InstaGram Down Please Sleep NOW"
+
+    - name: services_up
+      ansible.builtin.debug:
+        msg: "InstaGram UP, Start Wasting Time"

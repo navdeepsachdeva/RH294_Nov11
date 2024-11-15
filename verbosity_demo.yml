@@ -1,0 +1,28 @@
+- name: Verbosity Demo
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Apache Httpd Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      register: captured
+
+    - name: Print Captured Complete Output
+      ansible.builtin.debug:
+        msg: "{{ captured }}"
+        verbosity: 2
+        # var: captured
+
+    # - name: Deploy Web Page
+    #   ansible.builtin.copy:
+    #     content: "Index Page"
+    #     dest: /var/www/html/index.html
+    #     mode: 0644
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+      when: captured.changed

@@ -1,0 +1,14 @@
+---
+# tasks file for info_server
+
+- name: Info Collection Started
+  ansible.builtin.command: sleep 2
+  notify:
+    - collection Started
+
+- name: Collect System Info in FIle
+  ansible.builtin.template:
+    src: "{{ info_server_template }}"
+    dest: "{{ info_server_file }}"
+  notify:
+    - system Info Collected

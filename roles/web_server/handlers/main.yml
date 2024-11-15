@@ -1,0 +1,19 @@
+---
+# handlers file for web_server
+
+- name: Extra Handler
+  ansible.builtin.debug:
+    msg: "There for NO Reason"
+
+- name: App Deployed
+  ansible.builtin.debug:
+    msg: "Application Deployed"
+
+- name: Package Installed
+  ansible.builtin.debug:
+    msg: "Http package Installed"
+
+- name: Restart Web Service
+  ansible.builtin.service:
+    name: "{{ web_server_service }}"
+    state: restarted

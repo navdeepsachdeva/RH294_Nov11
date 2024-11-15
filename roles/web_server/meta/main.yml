@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Antonio N
+  description: Testing
+  company: Council Money Collection
+
+  license: license (GPL-2.0-or-later, MIT, etc)
+
+  min_ansible_version: 2.1
+
+
+  galaxy_tags: []
+
+dependencies:
+  - role: info_server
+  - role: security_server

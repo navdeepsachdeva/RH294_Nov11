@@ -1,0 +1,18 @@
+- name: Cron Demo
+  hosts: servera*
+  gather_facts: false
+  tasks:
+  - name: Remove tempuser
+    ansible.posix.at:
+      command: echo "sadsd" >> /tmp/meme
+      count: 20
+      units: minutes
+      unique: true
+
+  - name: Regular Job
+    ansible.builtin.cron:
+      name: Append Date
+      job: date>>/home/devops/mydate
+      minute: 0
+      hour: 16
+      weekday: 5

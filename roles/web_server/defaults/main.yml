@@ -1,0 +1,8 @@
+---
+# defaults file for web_server
+
+web_server_package: httpd
+web_server_service: httpd
+web_server_state: present
+web_server_content: "Level2_default_Content"
+web_server_index: /var/www/html/index.html

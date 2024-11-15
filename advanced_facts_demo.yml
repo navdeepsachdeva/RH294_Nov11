@@ -1,0 +1,38 @@
+- name: System/Package/Service Facts Demo
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Collect Limited Facts
+      ansible.builtin.setup:
+        gather_subset:
+          - '!all'
+          - 'min'
+          - 'network'
+          - 'hardware'
+    - name: Print Facts
+      ansible.builtin.debug:
+        msg: |
+            Architecture    = {{ ansible_facts['architecture'] }}
+            Date            = {{ ansible_facts['date_time']['date'] }}
+            Time            = {{ ansible_facts['date_time']['time'] }}
+            Ip Address      = {{ ansible_facts['default_ipv4']['address'] }}
+            OS              = {{ ansible_facts['distribution'] }}
+            Kernel          = {{ ansible_facts['kernel'] }}
+
+    - name: Collect Package Facts
+      ansible.builtin.package_facts:
+
+    - name: Retreive Package Info
+      ansible.builtin.debug:
+        msg: |
+            {{ ansible_facts['packages']['httpd'][0]['version'] }}
+            {{ ansible_facts['packages']['httpd'][0]['release'] }}
+
+    - name: Collect Service Facts
+      ansible.builtin.service_facts:
+
+    - name: Service Information
+      ansible.builtin.debug:
+        msg: |
+            {{ ansible_facts['services']['httpd.service']['state']}}
+            {{ ansible_facts['services']['httpd.service']['status']}}

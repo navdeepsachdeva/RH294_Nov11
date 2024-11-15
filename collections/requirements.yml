@@ -1,0 +1,4 @@
+collections:
+  - name: cisco.catalystwan
+  - name: /home/student/Downloads/community-general-10.0.1.tar.gz
+  - name: community.crypto

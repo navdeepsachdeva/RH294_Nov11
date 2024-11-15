@@ -1,0 +1,31 @@
+- name: Best Practises for install and services start
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Apache Httpd Server
+      ansible.builtin.dnf:
+        name: 
+          - httpd
+          - vsftpd
+        # name: "{{ item }}"
+        state: present
+      # loop:
+      #   - httpd
+      #   - vsftpd
+
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+      loop:
+        - httpd
+        - vsftpd
+
+    # - name: Open Security Port
+    #   ansible.posix.firewalld:
+    #     service: http
+    #     permanent: true
+    #     state: enabled
+    #     immediate: true

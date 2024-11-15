@@ -1,0 +1,31 @@
+- name: Check Mode Demo
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Apache Httpd Server
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      check_mode: false
+
+    - name: Deploy Web Page
+      ansible.builtin.copy:
+        content: "Index Page"
+        dest: /var/www/html/index.html
+        mode: 0644
+      # check_mode: true
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+      check_mode: true
+
+    - name: Open Security Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+      check_mode: true
